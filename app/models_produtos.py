@@ -21,3 +21,9 @@ def inserir_produto(codigo, nome, preco_custo, preco_venda, categoria, quantidad
         VALUES (?, ?, ?, ?, ?, ?)
     """, (codigo, nome, preco_custo, preco_venda, categoria, quantidade))
     conexao.commit()
+
+
+
+def listar_produtos():
+    cursor.execute("""SELECT * FROM produtos""")
+    return cursor.fetchall()

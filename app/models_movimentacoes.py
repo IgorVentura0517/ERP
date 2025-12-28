@@ -17,15 +17,19 @@ def criar_tabela_movimentacoes():
     """)
     conexao.commit()
 
-def inserir_movimentacao(produto_id, usuario_id, tipo, quantidade, descricao):
-    # registra movimentação
+def inserir_movimentacao(
+    produto_id,
+    usuario_id,
+    tipo,
+    quantidade,
+    descricao=None
+):
     cursor.execute("""
-        INSERT INTO movimentacoes 
+        INSERT INTO movimentacoes
         (produto_id, usuario_id, tipo, quantidade, descricao)
         VALUES (?, ?, ?, ?, ?)
     """, (produto_id, usuario_id, tipo, quantidade, descricao))
 
-    # atualiza estoque
     if tipo == "entrada":
         cursor.execute("""
             UPDATE produtos
@@ -41,3 +45,19 @@ def inserir_movimentacao(produto_id, usuario_id, tipo, quantidade, descricao):
         """, (quantidade, produto_id))
 
     conexao.commit()
+
+
+def listar_movimentacoes():
+    cursor.execute("""
+        SELECT 
+            m.id,
+            p.nome,
+            m.tipo,
+            m.quantidade,
+            m.descricao,
+            m.data
+        FROM movimentacoes m
+        JOIN produtos p ON p.id = m.produto_id
+        ORDER BY m.data DESC
+    """)
+    return cursor.fetchall()
